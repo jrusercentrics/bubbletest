@@ -2,22 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Test DOMContentLoaded</title>
-  <!-- Cookiebot script com auto-blocking -->
+  <title>Cookiebot DOMContentLoaded Test</title>
+
+  <!-- Cookiebot script -->
   <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js"
           data-cbid="e2769309-3672-42d4-bc3f-d56333e6a880"
           data-blockingmode="auto"
           type="text/javascript"></script>
+
   <script>
-    window.addEventListener("DOMContentLoaded", () => {
-      console.log("Window DOMContentLoaded fired!");
+    let counterWindow = 0;
+    let counterDocument = 0;
+
+    window.addEventListener("DOMContentLoaded", (e) => {
+      counterWindow++;
+      console.log(`[Window] DOMContentLoaded fired ${counterWindow} time(s). Event target:`, e.target);
     });
-    document.addEventListener("DOMContentLoaded", () => {
-      console.log("Document DOMContentLoaded fired!");
+
+    document.addEventListener("DOMContentLoaded", (e) => {
+      counterDocument++;
+      console.log(`[Document] DOMContentLoaded fired ${counterDocument} time(s). Event target:`, e.target);
+    });
+
+    // Mostra o resultado final depois de um pequeno delay
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        console.log("=== Summary ===");
+        console.log("Document DOMContentLoaded count:", counterDocument);
+        console.log("Window DOMContentLoaded count:", counterWindow);
+      }, 500);
     });
   </script>
 </head>
 <body>
-  <h1>Test Page</h1>
+  <h1>Cookiebot DOMContentLoaded Test</h1>
+  <p>Open the console to see results.</p>
 </body>
 </html>
