@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Cookiebot DOMContentLoaded Test</title>
+  <title>Cookiebot DOMContentLoaded Guard Test</title>
 
   <!-- Cookiebot script -->
   <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js"
@@ -11,31 +11,38 @@
           type="text/javascript"></script>
 
   <script>
-    let counterWindow = 0;
-    let counterDocument = 0;
+    let domReadyHandled = false; // guard flag
 
+    function initOnce(origin) {
+      if (domReadyHandled) {
+        console.warn("⚠️ DOMContentLoaded handler ignored (duplicate from: " + origin + ")");
+        return;
+      }
+      domReadyHandled = true;
+      console.log("✅ DOMContentLoaded handler executed (origin: " + origin + ")");
+      // Aqui metes a tua lógica normal de inicialização
+    }
+
+    // Window listener (duplica sem guard)
     window.addEventListener("DOMContentLoaded", (e) => {
-      counterWindow++;
-      console.log(`[Window] DOMContentLoaded fired ${counterWindow} time(s). Event target:`, e.target);
+      initOnce(e.target === window ? "window dispatch" : "bubble from document");
     });
 
+    // (Opcional) Document listener para comparação
     document.addEventListener("DOMContentLoaded", (e) => {
-      counterDocument++;
-      console.log(`[Document] DOMContentLoaded fired ${counterDocument} time(s). Event target:`, e.target);
+      console.log("📄 Document DOMContentLoaded (fires once, normal)");
     });
 
-    // Mostra o resultado final depois de um pequeno delay
+    // Resumo no final
     window.addEventListener("load", () => {
       setTimeout(() => {
-        console.log("=== Summary ===");
-        console.log("Document DOMContentLoaded count:", counterDocument);
-        console.log("Window DOMContentLoaded count:", counterWindow);
+        console.log("=== Test Finished ===");
       }, 500);
     });
   </script>
 </head>
 <body>
-  <h1>Cookiebot DOMContentLoaded Test</h1>
-  <p>Open the console to see results.</p>
+  <h1>Test DOMContentLoaded with Guard</h1>
+  <p>Open the console to see the results.</p>
 </body>
 </html>
